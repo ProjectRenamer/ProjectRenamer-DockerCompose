@@ -1,0 +1,25 @@
+version : "3"
+
+services:
+  
+  webapi :
+    image : projectrenamer/projectrenamer-webapi
+    expose :
+      - 80
+    restart: always
+
+  lb:
+    image: dockercloud/haproxy:1.6.7
+    links:
+      - webapi
+    ports:
+      - 8081:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  webui : 
+    image : projectrenamer/projectrenamer-ui
+    ports :
+      - 8080:80
+    links:
+      - lb
